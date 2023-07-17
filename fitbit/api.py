@@ -65,6 +65,16 @@ class FitbitOauth2Client(object):
             kwargs['timeout'] = self.timeout
 
         try:
+            #TODO: Remove this print statement later
+            import pprint
+            pp = pprint.PrettyPrinter(indent=4)
+
+            pp.pprint('***************Request Info**********************')
+            pp.pprint(method)
+            pp.pprint(url)
+            pp.pprint(f'{kwargs}')
+            pp.pprint('***************End Request Info**********************')
+
             response = self.session.request(method, url, **kwargs)
 
             # If our current token has no expires_at, or something manages to slip
@@ -105,7 +115,7 @@ class FitbitOauth2Client(object):
         authorization to look at their data.  Then redirect the user to that
         URL, open their browser to it, or tell them to copy the URL into their
         browser.
-            - scope: pemissions that that are being requested [default ask all]
+            - scope: permissions that that are being requested [default ask all]
             - redirect_uri: url to which the response will posted. required here
               unless you specify only one Callback URL on the fitbit app or
               you already passed it to the constructor
@@ -139,6 +149,9 @@ class FitbitOauth2Client(object):
         """
         if redirect_uri:
             self.session.redirect_uri = redirect_uri
+        #TODO: Remove Later....
+        print("AccessToken URL is: ")
+        print(self.access_token_url)
         return self.session.fetch_token(
             self.access_token_url,
             username=self.client_id,
@@ -267,6 +280,7 @@ class Fitbit(object):
         except ValueError:
             raise exceptions.BadResponse
 
+        # TODO: Add control flow for auth_type, and write the refresh_token to the appropriate place if needed.
         return rep
 
     def user_profile_get(self, user_id=None):
